@@ -7,32 +7,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Perfis: PESQUISADOR | TECNICO | ADMIN
+model Usuario {
+  id            String   @id @default(uuid())
+  nome          String
+  email         String   @unique
+  matricula     String   @unique
+  perfil        String
+  // Common Name do certificado X.509 do cliente (usado pelo middleware mTLS)
+  certificadoCN String   @unique
+  ativo         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  // Relacionamento
+  agendamentos  Agendamento[]
+}
+
+// status: DISPONIVEL | MANUTENCAO
 model Equipamento {
   id              String       @id @default(uuid())
   nome            String
   patrimonio      String       @unique
   descricao       String
-  status          String      
-  localizacao     String       
-  categoria       String       
+  status          String
+  localizacao     String
+  categoria       String
   valorEstimado   Float
+  // Equipamentos sensíveis têm a reserva bloqueada sob umidade alta (OpenWeather)
+  sensivelUmidade Boolean      @default(false)
   createdAt       DateTime     @default(now())
-  
+
   // Relacionamento
   agendamentos    Agendamento[]
 }
 
+// statusAprovacao: PENDENTE | APROVADO | REJEITADO
 model Agendamento {
   id                 String      @id @default(uuid())
-  usuarioId          String      
-  equipamentoId      String      
+  usuarioId          String
+  equipamentoId      String
   dataInicio         DateTime
   dataFim            DateTime
-  finalidade         String      
-  statusAprovacao    String      
-  observacoesTecnico String?     
+  finalidade         String
+  statusAprovacao    String      @default("PENDENTE")
+  observacoesTecnico String?
+  // Condições climáticas registradas na criação (OpenWeather)
+  umidade            Int?
+  temperatura        Float?
+  condicaoClimatica  String?
   createdAt          DateTime    @default(now())
 
-  // Relação
+  // Relações
+  usuario            Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   equipamento        Equipamento @relation(fields: [equipamentoId], references: [id], onDelete: Cascade)
 }
