@@ -1,85 +1,50 @@
 // src/index.js
+require('dotenv').config();
 const express = require('express');
-const prisma = require('./db');
+const { Prisma } = require('@prisma/client');
+
 const app = express();
 
 app.use(express.json());
 
-// --- ROTAS DE EQUIPAMENTOS ---
+// ==========================================
+// ROTAS
+// ==========================================
+// TODO (mTLS): o middleware de validação do certificado entra aqui, antes das rotas,
+// buscando o Usuario por certificadoCN e anexando em req.usuario.
+app.use('/equipamentos', require('./routes/equipamentos'));
+app.use('/usuarios', require('./routes/usuarios'));
+app.use('/agendamentos', require('./routes/agendamentos'));
 
-// Listar todos os equipamentos
-app.get('/equipamentos', async (req, res) => {
-  try {
-    const equipamentos = await prisma.equipamento.findMany();
-    res.json(equipamentos);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar equipamentos" });
-  }
-});
+app.get('/', (req, res) => res.json({ api: 'LabAccess API', status: 'online' }));
 
-// Criar um novo equipamento (com os campos exigidos)
-app.post('/equipamentos', async (req, res) => {
-  try {
-    const { nome, patrimonio, descricao, status, localizacao, categoria, valorEstimado } = req.body;
-    const novoEquipamento = await prisma.equipamento.create({
-      data: { nome, patrimonio, descricao, status, localizacao, categoria, valorEstimado }
-    });
-    res.status(201).json(novoEquipamento);
-  } catch (error) {
-    res.status(400).json({ error: "Erro ao criar equipamento. Verifique se o patrimônio é único." });
-  }
-});
-
-// --- ROTAS DE AGENDAMENTOS & INTEGRAÇÃO EXTERNA (OpenWeather) ---
-
-app.post('/agendamentos', async (req, res) => {
-  try {
-    const { usuarioId, equipamentoId, dataInicio, dataFim, finalidade, statusAprovacao, observacoesTecnico, cidade } = req.body;
-
-    // INTEGRAÇÃO COM API EXTERNA (OpenWeather)
-    const apiKey = process.env.WEATHER_API_KEY || 'sua_chave_aqui';
-    const cidadeConsulta = cidade || 'Fortaleza';
-    
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cidadeConsulta}&appid=${apiKey}&units=metric`);
-    const climaData = await response.json();
-
-    if (response.ok) {
-      const umidade = climaData.main.humidity;
-      if (umidade > 90) {
-        console.log(`Alerta: Umidade alta em ${cidadeConsulta} (${umidade}%)`);
-      }
+// ==========================================
+// TRATAMENTO DE ERROS
+// ==========================================
+// Express 5 encaminha automaticamente erros lançados em rotas async para cá
+app.use((error, req, res, next) => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: "Registro não encontrado" });
     }
-
-    const novoAgendamento = await prisma.agendamento.create({
-      data: {
-        usuarioId,
-        equipamentoId,
-        dataInicio: new Date(dataInicio),
-        dataFim: new Date(dataFim),
-        finalidade,
-        statusAprovacao: statusAprovacao || 'PENDENTE',
-        observacoesTecnico: observacoesTecnico || 'Agendamento criado com sucesso.'
-      }
-    });
-
-    res.status(201).json(novoAgendamento);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erro ao registrar agendamento ou consultar API externa." });
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: `Valor já cadastrado: ${error.meta?.target}` });
+    }
+    if (error.code === 'P2003') {
+      return res.status(400).json({ error: "Referência inválida (usuário ou equipamento inexistente)" });
+    }
   }
+  if (error instanceof Prisma.PrismaClientValidationError) {
+    return res.status(400).json({ error: "Dados inválidos. Verifique os tipos dos campos." });
+  }
+
+  console.error(error);
+  return res.status(500).json({ error: "Erro interno do servidor" });
 });
 
-app.get('/agendamentos', async (req, res) => {
-  try {
-    const agendamentos = await prisma.agendamento.findMany({
-      include: { equipamento: true }
-    });
-    res.json(agendamentos);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar agendamentos" });
-  }
-});
-
+// ==========================================
+// INICIALIZAÇÃO DO SERVIDOR
+// ==========================================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
