@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma skills sync || exit 0"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,11 @@
   },
   "homepage": "https://github.com/davirodrigues222/LabAccess-API#readme",
   "dependencies": {
-    "@prisma/client": "^7.10.1",
     "dotenv": "^18.0.8",
     "express": "^5.3.0"
   },
   "devDependencies": {
-    "prisma": "^8.0.0-rc.23"
+    "@prisma/client": "^5.22.0",
+    "prisma": "^5.22.0"
   }
 }
