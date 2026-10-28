@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Equipamento {
+  id              String       @id @default(uuid())
+  nome            String
+  patrimonio      String       @unique
+  descricao       String
+  status          String      
+  localizacao     String       
+  categoria       String       
+  valorEstimado   Float
+  createdAt       DateTime     @default(now())
+  
+  // Relacionamento
+  agendamentos    Agendamento[]
+}
+
+model Agendamento {
+  id                 String      @id @default(uuid())
+  usuarioId          String      
+  equipamentoId      String      
+  dataInicio         DateTime
+  dataFim            DateTime
+  finalidade         String      
+  statusAprovacao    String      
+  observacoesTecnico String?     
+  createdAt          DateTime    @default(now())
+
+  // Relação
+  equipamento        Equipamento @relation(fields: [equipamentoId], references: [id], onDelete: Cascade)
+}
