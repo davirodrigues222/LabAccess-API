@@ -1,5 +1,6 @@
 node_modules/
 .env
-certs/*.key
-certs/*.pem
-!certs/ca.crt
+
+# Certificados e chaves: cada ambiente gera os seus com "npm run certs". Nunca commitar chaves privadas.
+certs/*
+!certs/.gitkeep

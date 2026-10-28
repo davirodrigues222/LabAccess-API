@@ -9,18 +9,32 @@ datasource db {
 
 // Perfis: PESQUISADOR | TECNICO | ADMIN
 model Usuario {
-  id            String   @id @default(uuid())
-  nome          String
-  email         String   @unique
-  matricula     String   @unique
-  perfil        String
-  // Common Name do certificado X.509 do cliente (usado pelo middleware mTLS)
-  certificadoCN String   @unique
-  ativo         Boolean  @default(true)
-  createdAt     DateTime @default(now())
+  id                     String   @id @default(uuid())
+  nome                   String
+  email                  String   @unique
+  matricula              String   @unique
+  perfil                 String
+  // Common Name do certificado X.509 do cliente (informativo)
+  certificadoCN          String   @unique
+  // Fingerprint SHA-256 do certificado do cliente (AB:CD:...). É o que identifica o usuário no mTLS.
+  certificadoFingerprint String?  @unique
+  ativo                  Boolean  @default(true)
+  createdAt              DateTime @default(now())
 
-  // Relacionamento
-  agendamentos  Agendamento[]
+  // Relacionamentos
+  agendamentos           Agendamento[]
+  sessoes                SessaoCertificado[]
+}
+
+// "Login" do mTLS: registra que o certificado iniciou uma sessão com prazo de validade.
+// O logout apaga a linha; sessão expirada é tratada como não autenticada.
+model SessaoCertificado {
+  fingerprint String   @id
+  usuarioId   String
+  expiraEm    DateTime
+  criadoEm    DateTime @default(now())
+
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }
 
 // status: DISPONIVEL | MANUTENCAO

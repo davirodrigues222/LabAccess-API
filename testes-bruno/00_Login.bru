@@ -1,0 +1,20 @@
+meta {
+  name: Login (mTLS)
+  type: http
+  seq: 0
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("retorna perfil do usuário", function() {
+    expect(res.body.usuario.perfil).to.be.a("string");
+  });
+}
