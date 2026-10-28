@@ -1,0 +1,27 @@
+meta {
+  name: Aprovar (tecnico)
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "statusAprovacao": "APROVADO",
+    "observacoesTecnico": "Liberado. Calibrar a lente antes do uso."
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("ficou APROVADO", function() {
+    expect(res.body.statusAprovacao).to.equal("APROVADO");
+  });
+}

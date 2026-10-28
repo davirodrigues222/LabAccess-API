@@ -1,0 +1,27 @@
+meta {
+  name: Conflito de horario (409)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuarioId": "{{usuarioId}}",
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{dataInicio}}",
+    "dataFim": "{{dataFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+tests {
+  test("status 409", function() {
+    expect(res.status).to.equal(409);
+  });
+}

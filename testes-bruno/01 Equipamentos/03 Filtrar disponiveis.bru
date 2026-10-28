@@ -1,0 +1,17 @@
+meta {
+  name: Filtrar disponiveis
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/equipamentos?status=DISPONIVEL
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

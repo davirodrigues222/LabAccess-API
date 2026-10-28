@@ -1,0 +1,17 @@
+meta {
+  name: Historico do usuario
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/usuarios/{{usuarioId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

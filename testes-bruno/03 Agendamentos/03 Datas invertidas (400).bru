@@ -1,0 +1,27 @@
+meta {
+  name: Datas invertidas (400)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuarioId": "{{usuarioId}}",
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{dataFim}}",
+    "dataFim": "{{dataInicio}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

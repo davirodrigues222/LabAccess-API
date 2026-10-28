@@ -1,0 +1,17 @@
+meta {
+  name: Buscar por id
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

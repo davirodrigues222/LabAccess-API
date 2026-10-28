@@ -1,0 +1,17 @@
+meta {
+  name: Listar com filtros
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/agendamentos?usuarioId={{usuarioId}}&statusAprovacao=PENDENTE
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

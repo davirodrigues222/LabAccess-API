@@ -1,0 +1,31 @@
+meta {
+  name: Reservar equipamento em manutencao (409)
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuarioId": "{{usuarioId}}",
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{dataOutra}}",
+    "dataFim": "{{dataOutraFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  bru.setVar("dataOutra", new Date(Date.now() + 3 * 86400000).toISOString()); bru.setVar("dataOutraFim", new Date(Date.now() + 3 * 86400000 + 3600000).toISOString());
+}
+
+tests {
+  test("status 409", function() {
+    expect(res.status).to.equal(409);
+  });
+}

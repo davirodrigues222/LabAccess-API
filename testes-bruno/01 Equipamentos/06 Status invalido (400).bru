@@ -1,0 +1,21 @@
+meta {
+  name: Status invalido (400)
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "status": "QUEBRADO" }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

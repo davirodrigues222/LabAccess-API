@@ -1,0 +1,21 @@
+meta {
+  name: Colocar equipamento em manutencao
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "status": "MANUTENCAO" }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

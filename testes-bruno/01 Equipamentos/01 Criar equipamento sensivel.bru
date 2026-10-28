@@ -1,0 +1,40 @@
+meta {
+  name: Criar equipamento sensivel
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/equipamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Microscópio Óptico Trinocular",
+    "patrimonio": "PAT-TESTE-{{sufixo}}",
+    "descricao": "Microscópio com câmera acoplada, sensível à umidade",
+    "localizacao": "Bloco B, Lab 05",
+    "categoria": "Óptica",
+    "valorEstimado": 12500.90,
+    "sensivelUmidade": true
+  }
+}
+
+script:pre-request {
+  bru.setVar("sufixo", Date.now());
+}
+
+script:post-response {
+  bru.setVar("equipamentoId", res.body.id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("status inicial DISPONIVEL", function() {
+    expect(res.body.status).to.equal("DISPONIVEL");
+  });
+}

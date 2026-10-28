@@ -1,0 +1,17 @@
+meta {
+  name: Buscar por id
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
