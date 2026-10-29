@@ -5,7 +5,7 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  url: {{comoTecnico}}/agendamentos/{{agendamentoLongeId}}
   body: json
   auth: none
 }
@@ -15,10 +15,6 @@ body:json {
     "statusAprovacao": "APROVADO",
     "observacoesTecnico": "Liberado. Calibrar a lente antes do uso."
   }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
 }
 
 tests {

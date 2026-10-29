@@ -1,0 +1,21 @@
+meta {
+  name: 11 Pesquisador cancela a reserva
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{comoPesquisador}}/agendamentos/{{demoAgendamentoId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}
+
+docs {
+  O dono pode cancelar a própria reserva (também deixa a demo pronta para rodar de novo).
+}

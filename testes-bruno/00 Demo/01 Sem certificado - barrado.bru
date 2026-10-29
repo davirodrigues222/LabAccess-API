@@ -1,0 +1,21 @@
+meta {
+  name: 01 Sem certificado - barrado
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{semCertificado}}/equipamentos
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}
+
+docs {
+  Sem o "crachá digital" (certificado de cliente), a API recusa o acesso: 401.
+}

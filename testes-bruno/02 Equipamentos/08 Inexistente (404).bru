@@ -5,13 +5,9 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/equipamentos/00000000-0000-0000-0000-000000000000
+  url: {{comoAdmin}}/equipamentos/00000000-0000-0000-0000-000000000000
   body: none
   auth: none
-}
-
-script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
 }
 
 tests {

@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/equipamentos
+  url: {{comoAdmin}}/equipamentos
   body: json
   auth: none
 }
@@ -23,7 +23,6 @@ body:json {
 }
 
 script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
   bru.setVar("sufixo", Date.now());
 }
 

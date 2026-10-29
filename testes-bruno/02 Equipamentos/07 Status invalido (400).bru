@@ -5,17 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  url: {{comoAdmin}}/equipamentos/{{equipamentoId}}
   body: json
   auth: none
 }
 
 body:json {
   { "status": "QUEBRADO" }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
 }
 
 tests {

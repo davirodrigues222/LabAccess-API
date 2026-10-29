@@ -1,0 +1,51 @@
+meta {
+  name: 06 Reserva do osciloscopio - grava o clima
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{comoPesquisador}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuarioId": "{{tecnicoId}}",
+    "equipamentoId": "{{osciloscopioId}}",
+    "dataInicio": "{{demoInicio}}",
+    "dataFim": "{{demoFim}}",
+    "finalidade": "Medição de sinais do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  // Dia (1 a 4) e hora aleatórios para não colidir com execuções anteriores da demo
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() + 1 + Math.floor(Math.random() * 4));
+  inicio.setHours(8 + Math.floor(Math.random() * 9), 0, 0, 0);
+  bru.setVar("demoInicio", inicio.toISOString());
+  bru.setVar("demoFim", new Date(inicio.getTime() + 60 * 60 * 1000).toISOString());
+}
+
+script:post-response {
+  bru.setVar("demoAgendamentoId", res.body.id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("clima do OpenWeather gravado na reserva", function() {
+    expect(res.body.umidade).to.be.a("number");
+    expect(res.body.temperatura).to.be.a("number");
+  });
+  test("o usuarioId do corpo foi ignorado: a reserva é de quem tem o certificado", function() {
+    expect(res.body.usuarioId).to.equal(bru.getVar("pesquisadorId"));
+  });
+}
+
+docs {
+  Repare em dois pontos da resposta: (1) umidade, temperatura e condicaoClimatica vieram do OpenWeather; (2) o corpo pedia a reserva em nome do TÉCNICO, mas ela ficou no nome do PESQUISADOR, dono do certificado.
+}

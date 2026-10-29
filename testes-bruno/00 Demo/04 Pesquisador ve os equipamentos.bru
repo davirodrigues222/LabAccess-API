@@ -1,0 +1,30 @@
+meta {
+  name: 04 Pesquisador ve os equipamentos
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{comoPesquisador}}/equipamentos
+  body: none
+  auth: none
+}
+
+script:post-response {
+  const porPatrimonio = (p) => (res.body.find((e) => e.patrimonio === p) || {}).id;
+  bru.setVar("osciloscopioId", porPatrimonio("PAT-0002"));
+  bru.setVar("microscopioId", porPatrimonio("PAT-0001"));
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("só aparecem equipamentos disponíveis", function() {
+    expect(res.body.every((e) => e.status === "DISPONIVEL")).to.equal(true);
+  });
+}
+
+docs {
+  A impressora 3D está em manutenção e por isso não aparece para o pesquisador.
+}

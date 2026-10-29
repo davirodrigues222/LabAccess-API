@@ -5,13 +5,9 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/auth/login
+  url: {{comoAdmin}}/auth/login
   body: none
   auth: none
-}
-
-script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
 }
 
 script:post-response {

@@ -5,17 +5,13 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/equipamentos
+  url: {{comoPesquisador}}/equipamentos
   body: json
   auth: none
 }
 
 body:json {
   { "nome": "X", "patrimonio": "PAT-NEGADO-{{sufixo}}", "descricao": "x", "localizacao": "x", "categoria": "x", "valorEstimado": 1 }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
 }
 
 tests {

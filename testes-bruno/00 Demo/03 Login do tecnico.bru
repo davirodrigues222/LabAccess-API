@@ -1,0 +1,24 @@
+meta {
+  name: 03 Login do tecnico
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{comoTecnico}}/auth/login
+  body: none
+  auth: none
+}
+
+script:post-response {
+  bru.setVar("tecnicoId", res.body.usuario.id);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("o certificado identificou o técnico", function() {
+    expect(res.body.usuario.perfil).to.equal("TECNICO");
+  });
+}

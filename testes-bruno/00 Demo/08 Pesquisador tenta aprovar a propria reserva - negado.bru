@@ -1,0 +1,21 @@
+meta {
+  name: 08 Pesquisador tenta aprovar a propria reserva - negado
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{comoPesquisador}}/agendamentos/{{demoAgendamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "statusAprovacao": "APROVADO" }
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+}

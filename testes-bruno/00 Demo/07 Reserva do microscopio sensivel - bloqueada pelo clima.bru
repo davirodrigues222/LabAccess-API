@@ -1,0 +1,33 @@
+meta {
+  name: 07 Reserva do microscopio sensivel - bloqueada pelo clima
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{comoPesquisador}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipamentoId": "{{microscopioId}}",
+    "dataInicio": "{{demoInicio}}",
+    "dataFim": "{{demoFim}}",
+    "finalidade": "Análise de amostras"
+  }
+}
+
+tests {
+  test("status 422", function() {
+    expect(res.status).to.equal(422);
+  });
+  test("bloqueado por umidade (requer UMIDADE_MAXIMA=10 no .env)", function() {
+    expect(res.body.clima.umidade).to.be.above(res.body.limiteUmidade);
+  });
+}
+
+docs {
+  O microscópio é sensível à umidade. A previsão para o horário passa do limite configurado, então a API bloqueia a reserva: 422.
+}

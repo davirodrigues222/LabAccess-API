@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/agendamentos
+  url: {{comoPesquisador}}/agendamentos
   body: json
   auth: none
 }
@@ -17,10 +17,6 @@ body:json {
     "dataFim": "{{amanhaFim}}",
     "finalidade": "Análise de amostras do projeto de pesquisa"
   }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
 }
 
 tests {

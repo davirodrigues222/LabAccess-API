@@ -5,17 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  url: {{comoTecnico}}/equipamentos/{{equipamentoId}}
   body: json
   auth: none
 }
 
 body:json {
   { "valorEstimado": 1 }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
 }
 
 tests {

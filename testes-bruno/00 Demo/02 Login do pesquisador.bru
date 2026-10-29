@@ -1,0 +1,28 @@
+meta {
+  name: 02 Login do pesquisador
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{comoPesquisador}}/auth/login
+  body: none
+  auth: none
+}
+
+script:post-response {
+  bru.setVar("pesquisadorId", res.body.usuario.id);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("o certificado identificou o pesquisador", function() {
+    expect(res.body.usuario.perfil).to.equal("PESQUISADOR");
+  });
+}
+
+docs {
+  Nenhuma senha foi enviada: a API reconheceu o usuário pelo certificado e abriu uma sessão de 60 minutos.
+}

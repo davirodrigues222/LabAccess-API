@@ -5,17 +5,13 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/agendamentos
+  url: {{comoPesquisador}}/agendamentos
   body: json
   auth: none
 }
 
 body:json {
   { "equipamentoId": "{{equipamentoId}}" }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
 }
 
 tests {

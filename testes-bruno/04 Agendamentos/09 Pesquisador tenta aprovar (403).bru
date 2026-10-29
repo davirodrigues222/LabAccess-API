@@ -5,17 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  url: {{comoPesquisador}}/agendamentos/{{agendamentoLongeId}}
   body: json
   auth: none
 }
 
 body:json {
   { "statusAprovacao": "APROVADO" }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
 }
 
 tests {

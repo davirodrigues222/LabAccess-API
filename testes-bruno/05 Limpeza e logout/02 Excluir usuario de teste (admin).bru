@@ -5,13 +5,9 @@ meta {
 }
 
 delete {
-  url: {{baseUrl}}/usuarios/{{novoUsuarioId}}
+  url: {{comoAdmin}}/usuarios/{{novoUsuarioId}}
   body: none
   auth: none
-}
-
-script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
 }
 
 tests {

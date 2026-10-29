@@ -5,13 +5,9 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/auth/login
+  url: {{comoTecnico}}/auth/login
   body: none
   auth: none
-}
-
-script:pre-request {
-  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
 }
 
 script:post-response {

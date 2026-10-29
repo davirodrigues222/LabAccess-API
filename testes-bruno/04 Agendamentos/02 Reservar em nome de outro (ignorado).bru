@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/agendamentos
+  url: {{comoPesquisador}}/agendamentos
   body: json
   auth: none
 }
@@ -21,7 +21,6 @@ body:json {
 }
 
 script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
   const inicio = new Date();
   inicio.setDate(inicio.getDate() + 2);
   inicio.setHours(9, 0, 0, 0);

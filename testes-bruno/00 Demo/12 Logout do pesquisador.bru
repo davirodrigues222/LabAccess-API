@@ -1,0 +1,17 @@
+meta {
+  name: 12 Logout do pesquisador
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{comoPesquisador}}/auth/logout
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}

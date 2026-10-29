@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/usuarios
+  url: {{comoAdmin}}/usuarios
   body: json
   auth: none
 }
@@ -22,7 +22,6 @@ body:json {
 }
 
 script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
   const hex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0").toUpperCase();
   bru.setVar("fingerprintNovo", Array.from({ length: 32 }, hex).join(":"));
 }

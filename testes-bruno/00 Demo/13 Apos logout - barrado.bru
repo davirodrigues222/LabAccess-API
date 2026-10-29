@@ -1,0 +1,21 @@
+meta {
+  name: 13 Apos logout - barrado
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{comoPesquisador}}/equipamentos
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}
+
+docs {
+  O certificado continua válido, mas a sessão acabou: precisa fazer login de novo.
+}

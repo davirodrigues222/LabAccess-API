@@ -1,0 +1,25 @@
+meta {
+  name: 10 Tecnico ve as condicoes do microscopio
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{comoTecnico}}/equipamentos/{{microscopioId}}/condicoes
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("clima atual + previsão + indicação de risco", function() {
+    expect(res.body.clima).to.have.property("atual");
+    expect(res.body).to.have.property("risco");
+  });
+}
+
+docs {
+  Painel do técnico: junta o equipamento com o clima atual e a previsão do OpenWeather e indica se há risco.
+}

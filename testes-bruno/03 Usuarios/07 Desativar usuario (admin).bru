@@ -5,17 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/usuarios/{{novoUsuarioId}}
+  url: {{comoAdmin}}/usuarios/{{novoUsuarioId}}
   body: json
   auth: none
 }
 
 body:json {
   { "ativo": false }
-}
-
-script:pre-request {
-  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
 }
 
 tests {

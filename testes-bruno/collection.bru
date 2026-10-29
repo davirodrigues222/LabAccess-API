@@ -1,15 +1,24 @@
 vars:pre-request {
-  baseUrl: https://localhost:3000
-  semCertUrl: https://127.0.0.1:3000
+  comoAdmin: https://127.0.0.2:3000
+  comoTecnico: https://127.0.0.3:3000
+  comoPesquisador: https://localhost:3000
+  semCertificado: https://127.0.0.1:3000
 }
 
 docs {
   # LabAccess API — testes com mTLS
 
-  Pré-requisitos: `npm run certs`, `npm run seed` e `npm start`.
+  Pré-requisitos: `npm run certs -- --san IP:127.0.0.2,IP:127.0.0.3`, `npm run seed` e `npm start`.
 
-  - O certificado de cliente é escolhido por requisição: cada uma define `perfil` (admin | tecnico | pesquisador)
-    e o Bruno envia `certs/<perfil>.crt` + `.key` (ver bruno.json → clientCertificates).
-  - URLs em `{{semCertUrl}}` (127.0.0.1) não batem com o domínio "localhost" → nenhum certificado é enviado.
-  - Bruno → Preferences → "Use custom CA certificate" → `certs/ca.crt` (para confiar no servidor).
+  Cada perfil acessa a API por um endereço (todos apontam para o mesmo servidor local),
+  e o Bruno envia o certificado configurado para aquele endereço (bruno.json → clientCertificates):
+
+  | Variável | Endereço | Certificado enviado |
+  |---|---|---|
+  | {{comoAdmin}} | 127.0.0.2 | certs/admin.crt |
+  | {{comoTecnico}} | 127.0.0.3 | certs/tecnico.crt |
+  | {{comoPesquisador}} | localhost | certs/pesquisador.crt |
+  | {{semCertificado}} | 127.0.0.1 | nenhum |
+
+  Bruno → Preferences → "Use custom CA certificate" → `certs/ca.crt` (para confiar no servidor).
 }

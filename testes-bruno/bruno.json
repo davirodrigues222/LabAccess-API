@@ -10,10 +10,22 @@
     "enabled": true,
     "certs": [
       {
+        "domain": "127.0.0.2",
+        "type": "cert",
+        "certFilePath": "../certs/admin.crt",
+        "keyFilePath": "../certs/admin.key"
+      },
+      {
+        "domain": "127.0.0.3",
+        "type": "cert",
+        "certFilePath": "../certs/tecnico.crt",
+        "keyFilePath": "../certs/tecnico.key"
+      },
+      {
         "domain": "localhost",
         "type": "cert",
-        "certFilePath": "../certs/{{perfil}}.crt",
-        "keyFilePath": "../certs/{{perfil}}.key"
+        "certFilePath": "../certs/pesquisador.crt",
+        "keyFilePath": "../certs/pesquisador.key"
       }
     ]
   }

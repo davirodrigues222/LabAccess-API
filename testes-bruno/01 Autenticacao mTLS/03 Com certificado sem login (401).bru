@@ -5,13 +5,9 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/equipamentos
+  url: {{comoPesquisador}}/equipamentos
   body: none
   auth: none
-}
-
-script:pre-request {
-  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
 }
 
 tests {

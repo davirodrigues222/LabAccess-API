@@ -1,0 +1,25 @@
+meta {
+  name: 05 Pesquisador tenta cadastrar equipamento - negado
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{comoPesquisador}}/equipamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  { "nome": "Equipamento pirata", "patrimonio": "PAT-PIRATA", "descricao": "x", "localizacao": "x", "categoria": "x", "valorEstimado": 1 }
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+}
+
+docs {
+  Sei quem você é (pesquisador), mas cadastrar equipamento é só para ADMIN: 403.
+}
