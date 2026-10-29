@@ -1,0 +1,21 @@
+meta {
+  name: Excluir inexistente (404)
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+}

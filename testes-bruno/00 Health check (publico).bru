@@ -1,0 +1,20 @@
+meta {
+  name: Health check (publico)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{semCertUrl}}/
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("informa autenticação mTLS", function() {
+    expect(res.body.autenticacao).to.equal("mTLS");
+  });
+}

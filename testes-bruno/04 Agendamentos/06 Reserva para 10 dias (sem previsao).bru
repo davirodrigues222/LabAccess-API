@@ -1,0 +1,42 @@
+meta {
+  name: Reserva para 10 dias (sem previsao)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{longeInicio}}",
+    "dataFim": "{{longeFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() + 10);
+  inicio.setHours(9, 0, 0, 0);
+  bru.setVar("longeInicio", inicio.toISOString());
+  bru.setVar("longeFim", new Date(inicio.getTime() + 2 * 60 * 60 * 1000).toISOString());
+}
+
+script:post-response {
+  bru.setVar("agendamentoLongeId", res.body.id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("fora do alcance da previsão (5 dias): sem dados de clima", function() {
+    expect(res.body.umidade).to.equal(null);
+  });
+}

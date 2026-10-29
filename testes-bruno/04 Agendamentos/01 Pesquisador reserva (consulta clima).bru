@@ -1,0 +1,52 @@
+meta {
+  name: Pesquisador reserva (consulta clima)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{amanhaInicio}}",
+    "dataFim": "{{amanhaFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+  bru.setVar("agendamentoId", "");
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() + 1);
+  inicio.setHours(14, 0, 0, 0);
+  bru.setVar("amanhaInicio", inicio.toISOString());
+  bru.setVar("amanhaFim", new Date(inicio.getTime() + 2 * 60 * 60 * 1000).toISOString());
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("agendamentoId", res.body.id);
+}
+
+tests {
+  test("status 201 ou 422", function() {
+    expect(res.status).to.be.oneOf([201,422]);
+  });
+  test("201 grava o clima e fica no nome do pesquisador / 422 explica o bloqueio", function() {
+    if (res.status === 201) {
+      expect(res.body.usuarioId).to.equal(bru.getVar("pesquisadorId"));
+      expect(res.body.statusAprovacao).to.equal("PENDENTE");
+    } else {
+      expect(res.body.clima.umidade).to.be.above(res.body.limiteUmidade);
+    }
+  });
+}
+
+docs {
+  201 = reserva criada com umidade/temperatura/condicaoClimatica do OpenWeather. 422 = bloqueada por umidade (para forçar na apresentação: UMIDADE_MAXIMA=10 no .env e reiniciar).
+}

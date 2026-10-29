@@ -1,0 +1,24 @@
+meta {
+  name: Listar (pesquisador ve so disponiveis)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/equipamentos
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("apenas DISPONIVEL", function() {
+    expect(res.body.every((e) => e.status === "DISPONIVEL")).to.equal(true);
+  });
+}

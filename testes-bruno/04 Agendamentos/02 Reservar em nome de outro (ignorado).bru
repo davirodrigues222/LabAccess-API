@@ -1,0 +1,49 @@
+meta {
+  name: Reservar em nome de outro (ignorado)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuarioId": "{{adminId}}",
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{depoisInicio}}",
+    "dataFim": "{{depoisFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() + 2);
+  inicio.setHours(9, 0, 0, 0);
+  bru.setVar("depoisInicio", inicio.toISOString());
+  bru.setVar("depoisFim", new Date(inicio.getTime() + 2 * 60 * 60 * 1000).toISOString());
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("agendamentoOutroId", res.body.id);
+}
+
+tests {
+  test("status 201 ou 422", function() {
+    expect(res.status).to.be.oneOf([201,422]);
+  });
+  test("o usuarioId do corpo é ignorado: vale o dono do certificado", function() {
+    if (res.status === 201) {
+      expect(res.body.usuarioId).to.equal(bru.getVar("pesquisadorId"));
+    }
+  });
+}
+
+docs {
+  Tentativa de fraude: o corpo diz usuarioId = admin, mas a API usa a identidade do certificado.
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Tecnico tenta cancelar (403)
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+}

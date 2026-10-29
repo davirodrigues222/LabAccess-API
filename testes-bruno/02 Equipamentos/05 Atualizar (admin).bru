@@ -1,0 +1,25 @@
+meta {
+  name: Atualizar (admin)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "localizacao": "Bloco B, Lab 07", "valorEstimado": 13000 }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

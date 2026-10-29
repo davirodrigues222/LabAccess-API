@@ -1,0 +1,31 @@
+meta {
+  name: Tecnico aprova
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{baseUrl}}/agendamentos/{{agendamentoLongeId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "statusAprovacao": "APROVADO",
+    "observacoesTecnico": "Liberado. Calibrar a lente antes do uso."
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("ficou APROVADO", function() {
+    expect(res.body.statusAprovacao).to.equal("APROVADO");
+  });
+}

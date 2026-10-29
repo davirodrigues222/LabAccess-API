@@ -1,0 +1,30 @@
+meta {
+  name: Condicoes climaticas (tecnico)
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}/condicoes
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("combina equipamento + clima atual + previsão", function() {
+    expect(res.body.equipamento.id).to.equal(bru.getVar("equipamentoId"));
+    expect(res.body).to.have.property("risco");
+    expect(res.body.clima).to.have.property("atual");
+  });
+}
+
+docs {
+  Integração OpenWeather: duas chamadas externas (/weather e /forecast) combinadas com os dados do equipamento.
+}

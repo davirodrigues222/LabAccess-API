@@ -1,0 +1,42 @@
+meta {
+  name: Cadastrar usuario (admin)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/usuarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Aluno de Teste",
+    "email": "aluno.{{sufixo}}@labaccess.local",
+    "matricula": "MAT-{{sufixo}}",
+    "perfil": "PESQUISADOR",
+    "certificadoCN": "aluno.{{sufixo}}",
+    "certificadoFingerprint": "{{fingerprintNovo}}"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+  const hex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0").toUpperCase();
+  bru.setVar("fingerprintNovo", Array.from({ length: 32 }, hex).join(":"));
+}
+
+script:post-response {
+  bru.setVar("novoUsuarioId", res.body.id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+}
+
+docs {
+  Em produção o fingerprint vem do certificado real do aluno (gerado pela CA do laboratório). Aqui usamos um valor aleatório no formato SHA-256.
+}

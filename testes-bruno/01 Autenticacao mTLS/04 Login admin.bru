@@ -1,0 +1,28 @@
+meta {
+  name: Login admin
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+script:post-response {
+  bru.setVar("adminId", res.body.usuario.id);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("certificado identifica o perfil ADMIN", function() {
+    expect(res.body.usuario.perfil).to.equal("ADMIN");
+  });
+}

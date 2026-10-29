@@ -1,0 +1,25 @@
+meta {
+  name: Tecnico coloca em manutencao
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "status": "MANUTENCAO" }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

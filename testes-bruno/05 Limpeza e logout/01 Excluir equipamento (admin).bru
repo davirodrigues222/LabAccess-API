@@ -1,0 +1,25 @@
+meta {
+  name: Excluir equipamento (admin)
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}
+
+docs {
+  Os agendamentos do equipamento são removidos em cascata.
+}

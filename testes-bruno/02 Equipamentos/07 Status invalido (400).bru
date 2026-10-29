@@ -1,0 +1,25 @@
+meta {
+  name: Status invalido (400)
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/equipamentos/{{equipamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "status": "QUEBRADO" }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

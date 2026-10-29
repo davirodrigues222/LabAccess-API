@@ -1,0 +1,21 @@
+meta {
+  name: Listar (admin)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/usuarios
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

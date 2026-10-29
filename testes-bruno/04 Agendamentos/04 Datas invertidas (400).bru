@@ -1,0 +1,30 @@
+meta {
+  name: Datas invertidas (400)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{amanhaFim}}",
+    "dataFim": "{{amanhaInicio}}",
+    "finalidade": "teste"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Logout (garante sessao fechada)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/logout
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}

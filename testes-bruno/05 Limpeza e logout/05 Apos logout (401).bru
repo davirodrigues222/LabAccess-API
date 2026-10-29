@@ -1,0 +1,25 @@
+meta {
+  name: Apos logout (401)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/equipamentos
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}
+
+docs {
+  O certificado continua válido, mas a sessão foi encerrada: é preciso fazer login de novo.
+}

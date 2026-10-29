@@ -1,0 +1,34 @@
+meta {
+  name: Email duplicado (409)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/usuarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Aluno de Teste",
+    "email": "aluno.{{sufixo}}@labaccess.local",
+    "matricula": "MAT-{{sufixo}}",
+    "perfil": "PESQUISADOR",
+    "certificadoCN": "aluno.{{sufixo}}",
+    "certificadoFingerprint": "{{fingerprintNovo}}"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+  const hex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0").toUpperCase();
+  bru.setVar("fingerprintNovo", Array.from({ length: 32 }, hex).join(":"));
+}
+
+tests {
+  test("status 409", function() {
+    expect(res.status).to.equal(409);
+  });
+}

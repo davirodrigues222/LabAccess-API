@@ -1,0 +1,25 @@
+meta {
+  name: Com certificado sem login (401)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/equipamentos
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}
+
+docs {
+  O certificado identifica o usuário, mas é preciso abrir uma sessão (POST /auth/login) antes de usar a API.
+}

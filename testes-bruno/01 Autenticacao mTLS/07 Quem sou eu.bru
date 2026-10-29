@@ -1,0 +1,25 @@
+meta {
+  name: Quem sou eu
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/auth/me
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("dados do certificado", function() {
+    expect(res.body.certificado.cn).to.equal("pesquisador");
+    expect(res.body.certificado.fingerprint).to.be.a("string");
+  });
+}

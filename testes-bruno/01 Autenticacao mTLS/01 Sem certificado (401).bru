@@ -1,0 +1,21 @@
+meta {
+  name: Sem certificado (401)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{semCertUrl}}/equipamentos
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}
+
+docs {
+  Requisição para 127.0.0.1: o Bruno não envia certificado de cliente. A API exige mTLS em todas as rotas, exceto a "/".
+}

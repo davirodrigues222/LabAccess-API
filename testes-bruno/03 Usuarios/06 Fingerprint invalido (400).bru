@@ -1,0 +1,32 @@
+meta {
+  name: Fingerprint invalido (400)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/usuarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Aluno de Teste",
+    "email": "aluno.{{sufixo}}@labaccess.local",
+    "matricula": "MAT-{{sufixo}}",
+    "perfil": "PESQUISADOR",
+    "certificadoCN": "aluno.{{sufixo}}",
+    "certificadoFingerprint": "AB:CD"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

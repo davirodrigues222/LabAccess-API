@@ -1,0 +1,28 @@
+meta {
+  name: Login tecnico
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "tecnico"); // certificado de cliente usado nesta requisição
+}
+
+script:post-response {
+  bru.setVar("tecnicoId", res.body.usuario.id);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("certificado identifica o perfil TECNICO", function() {
+    expect(res.body.usuario.perfil).to.equal("TECNICO");
+  });
+}

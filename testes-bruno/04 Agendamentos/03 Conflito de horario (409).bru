@@ -1,0 +1,33 @@
+meta {
+  name: Conflito de horario (409)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "equipamentoId": "{{equipamentoId}}",
+    "dataInicio": "{{amanhaInicio}}",
+    "dataFim": "{{amanhaFim}}",
+    "finalidade": "Análise de amostras do projeto de pesquisa"
+  }
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 409 ou 422", function() {
+    expect(res.status).to.be.oneOf([409,422]);
+  });
+  test("409 quando a primeira reserva foi criada", function() {
+    if (bru.getVar("agendamentoId")) expect(res.status).to.equal(409);
+  });
+}

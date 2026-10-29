@@ -1,0 +1,24 @@
+meta {
+  name: Pesquisador lista so os proprios
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/agendamentos?usuarioId={{adminId}}
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "pesquisador"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("mesmo pedindo os do admin, só vêm os dele", function() {
+    expect(res.body.every((a) => a.usuarioId === bru.getVar("pesquisadorId"))).to.equal(true);
+  });
+}

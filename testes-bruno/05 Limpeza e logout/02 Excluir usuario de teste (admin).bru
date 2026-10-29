@@ -1,0 +1,21 @@
+meta {
+  name: Excluir usuario de teste (admin)
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/usuarios/{{novoUsuarioId}}
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("perfil", "admin"); // certificado de cliente usado nesta requisição
+}
+
+tests {
+  test("status 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}
